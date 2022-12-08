@@ -19,6 +19,17 @@ app.use(express.urlencoded({ extended: true }))
 // app.use(express.static('public', options))
 // #############################################################################
 
+// API key authentication for all routes
+app.use(async (req, res, next) => {
+  const apiKey = req.headers['x-api-key']
+  if (apiKey === process.env.API_KEY) {
+    next()
+  } else {
+    res.status(401).json({ msg: 'unauthorized' }).end()
+  }
+})
+
+
 // Create or Update an item
 app.post('/:col/:key', async (req, res) => {
   console.log(req.body)
